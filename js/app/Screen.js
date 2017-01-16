@@ -14,7 +14,7 @@ define([],function(){
 				if (obj.pos.x == i && obj.pos.y == j) {
 					this.matrix[i][j] = obj;
 				}
-				else if (obj.pos.x != i || obj.pos.y != j) {
+				else if ((obj.pos.x != i || obj.pos.y != j) && this.matrix[i][j] == obj) {
 					this.matrix[i][j] = undefined;
 				}
 			}

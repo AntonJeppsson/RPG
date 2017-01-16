@@ -1,11 +1,13 @@
 define([
 	"consts",
 	"Character",
-	"Screen"
+	"Screen",
+	"Item"
 ], function(
 	consts,
 	Character,
-	Screen
+	Screen,
+	Item
 ){
 	var tileSize = consts.tileSize,
 		spriteSize = consts.spriteSize;
@@ -14,6 +16,7 @@ define([
 	var stage = new PIXI.Container();
 	var one;
 	var test;
+	var item;
 
 
 
@@ -26,10 +29,14 @@ define([
 
 	function setup(){
 		one = new Character();
+		item = new Item();
 		test = new Screen(15,10);
 		one.updatePosition(3,4);
+		item.updatePosition(5,5);
 		test.matrix[one.pos.x][one.pos.y] = one;
+		test.matrix[item.pos.x][item.pos.y] = item;
 		stage.addChild(one.sprite);
+		stage.addChild(item.sprite);
 		gameLoop();
 	}
 	
@@ -38,6 +45,7 @@ define([
 	function gameLoop() {
 		requestAnimationFrame(gameLoop);
 		test.updateMatrix(one);
+		test.updateMatrix(item);
 		for (var i = 0; i < test.matrix.length; i++) {
 			for (var j = 0; j < test.matrix[i].length; j++){
 				if (test.matrix[i][j] != undefined) {
