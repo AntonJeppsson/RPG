@@ -1,16 +1,19 @@
 define([
 	"consts",
-	"Character"
+	"Character",
+	"Screen"
 ], function(
 	consts,
-	Character
+	Character,
+	Screen
 ){
 	var tileSize = consts.tileSize,
 		spriteSize = consts.spriteSize;
-	var renderer = PIXI.autoDetectRenderer(14 * tileSize, 9 * tileSize);
+	var renderer = PIXI.autoDetectRenderer(15 * tileSize, 10 * tileSize);
 	document.body.appendChild(renderer.view);
 	var stage = new PIXI.Container();
 	var one;
+	var test;
 
 
 
@@ -23,6 +26,9 @@ define([
 
 	function setup(){
 		one = new Character();
+		test = new Screen(15,10);
+		one.updatePosition(3,4);
+		test.matrix[one.pos.x][one.pos.y] = one;
 		stage.addChild(one.sprite);
 		gameLoop();
 	}
@@ -31,34 +37,61 @@ define([
 
 	function gameLoop() {
 		requestAnimationFrame(gameLoop);
+		test.updateMatrix(one);
+		for (var i = 0; i < test.matrix.length; i++) {
+			for (var j = 0; j < test.matrix[i].length; j++){
+				if (test.matrix[i][j] != undefined) {
+					test.matrix[i][j].sprite.x = i * tileSize;
+					test.matrix[i][j].sprite.y = j * tileSize;
+				}
+			}
+		}
+
 		document.onkeydown = function(e) {
-	    switch (e.keyCode) {
-	        case 37:
-	        	one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_left.png"]);
-	        	if (one.sprite.x > 0) {
-		            one.sprite.x -= consts.tileSize;
-		        }
-	            break;
-	        case 38:
-	        	one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_up.png"]);
-	        	if (one.sprite.y > 0) {
-		            one.sprite.y -= consts.tileSize;
-		        }
-	            break;
-	        case 39:
-	        	one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_right.png"]);
-	        	if (one.sprite.x < 13 * tileSize) {
-		            one.sprite.x += consts.tileSize;
-		        }
-	            break;
-	        case 40:
-	        	one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_down.png"]);
-	        	if (one.sprite.y < 8 * tileSize) {
-		            one.sprite.y += consts.tileSize;
-		        }
-	            break;
+		    switch (e.keyCode) {
+		        case 37:
+		        	//left
+		        	if (one.dir != "left") {
+		        		one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_left.png"]);
+		        		one.dir = "left";
+		        	}
+		        	else if (test.inRange(one.pos.x - 1, one.pos.y)) {
+		        		one.updatePosition(-1,0);
+		        	}
+		            break;
+		        case 38:
+		        	//up
+		        	if (one.dir != "up") {
+		        		one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_up.png"]);
+		        		one.dir = "up";
+		        	}
+		        	else if (test.inRange(one.pos.x, one.pos.y - 1)) {
+		        		one.updatePosition(0,-1);
+		        	}
+		            break;
+		        case 39:
+		        	//right
+		        	if (one.dir != "right") {
+		        		one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_right.png"]);
+		        		one.dir = "right";
+		        	}
+		        	else if (test.inRange(one.pos.x + 1, one.pos.y)) {
+		        		one.updatePosition(1,0);
+		        	}
+		            break;
+		        case 40:
+		        	//down
+		        	if (one.dir != "down") {
+		        		one.sprite.setTexture(PIXI.utils.TextureCache["images/sprites/place_holder_main_sprite_down.png"]);
+		        		one.dir = "down";
+		        	}
+		        	else if (test.inRange(one.pos.x, one.pos.y + 1)) {
+		        		one.updatePosition(0,1);
+		        	}
+		            break;
 		    }
 		};
+		
 		renderer.render(stage);
 	}
 });
