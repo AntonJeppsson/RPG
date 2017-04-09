@@ -15,8 +15,8 @@ define([
 	}
 
 	Item.prototype.updatePosition = function(x,y) {
-		this.pos.x += x;
-		this.pos.y += y;
+		this.pos.x = x;
+		this.pos.y = y;
 	}
 
 	return Item;

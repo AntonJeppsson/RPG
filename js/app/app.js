@@ -16,7 +16,6 @@ define([
 	var stage = new PIXI.Container();
 	var one;
 	var test;
-	var item;
 
 
 
@@ -29,14 +28,12 @@ define([
 
 	function setup(){
 		one = new Character();
-		item = new Item();
 		test = new Screen(15,10);
-		one.updatePosition(3,4);
-		item.updatePosition(5,5);
-		test.matrix[one.pos.x][one.pos.y] = one;
-		test.matrix[item.pos.x][item.pos.y] = item;
+		test.updateMatrix(one,3,4);
+		console.log(test.matrix);
+		//one.updatePosition(3,4);
+		//test.matrix[one.pos.x][one.pos.y] = one;
 		stage.addChild(one.sprite);
-		stage.addChild(item.sprite);
 		gameLoop();
 	}
 	
@@ -44,8 +41,7 @@ define([
 
 	function gameLoop() {
 		requestAnimationFrame(gameLoop);
-		test.updateMatrix(one);
-		test.updateMatrix(item);
+		//test.updateMatrix(one,1,2);
 		for (var i = 0; i < test.matrix.length; i++) {
 			for (var j = 0; j < test.matrix[i].length; j++){
 				if (test.matrix[i][j] != undefined) {
@@ -64,7 +60,8 @@ define([
 		        		one.dir = "left";
 		        	}
 		        	else if (test.inRange(one.pos.x - 1, one.pos.y)) {
-		        		one.updatePosition(-1,0);
+		        		console.log(test.matrix);
+		        		test.updateMatrix(one,-1,0);
 		        	}
 		            break;
 		        case 38:
@@ -74,7 +71,7 @@ define([
 		        		one.dir = "up";
 		        	}
 		        	else if (test.inRange(one.pos.x, one.pos.y - 1)) {
-		        		one.updatePosition(0,-1);
+		        		test.updateMatrix(one,0,-1);
 		        	}
 		            break;
 		        case 39:
@@ -84,7 +81,7 @@ define([
 		        		one.dir = "right";
 		        	}
 		        	else if (test.inRange(one.pos.x + 1, one.pos.y)) {
-		        		one.updatePosition(1,0);
+		        		test.updateMatrix(one,1,0);
 		        	}
 		            break;
 		        case 40:
@@ -94,12 +91,12 @@ define([
 		        		one.dir = "down";
 		        	}
 		        	else if (test.inRange(one.pos.x, one.pos.y + 1)) {
-		        		one.updatePosition(0,1);
+		        		test.updateMatrix(one,0,1);
 		        	}
 		            break;
 		    }
 		};
-		
+
 		renderer.render(stage);
 	}
 });
